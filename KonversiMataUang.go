@@ -14,11 +14,13 @@ const (
 	usd_eur = 0.86
 )
 
-func Konversi(jumlah float64, MataUang string) (float64, float64, error) {
+func Konversi(jumlah float64, MataUang string) (float64, float64, string) {
 	if jumlah < 0 {
-		return 0, 0, fmt.Errorf("Tidak valid (jumlahnya negatif)")
+		return 0, 0, "Tidak valid (jumlahnya negatif)"
 	}
 	var usd float64
+	var gagal string = ""
+
 	switch strings.ToUpper(MataUang) {
 	case "IDR":
 		usd = jumlah * idr_usd
@@ -31,12 +33,16 @@ func Konversi(jumlah float64, MataUang string) (float64, float64, error) {
 	case "SGD":
 		usd = jumlah * sgd_usd
 	default:
-		return 0, 0, fmt.Errorf("kode mata uang tidak valid")
+		gagal = "kode mata uang tidak valid"
 	}
 
+	if gagal != "" {
+		return 0, 0, gagal
+	}
 	eur := usd * usd_eur
-	return usd, eur, nil
+	return usd, eur, ""
 }
+
 func main() {
 	var jumlah float64
 	var MataUang string
@@ -45,10 +51,11 @@ func main() {
 	fmt.Scan(&MataUang)
 	fmt.Print("ketik jumlah mata uang yang akan dikonversi (tanpa ./,): ")
 	fmt.Scan(&jumlah)
-	hasilUSD, hasilEUR, err := Konversi(jumlah, MataUang)
 
-	if err != nil {
-		fmt.Println("Error:", err)
+	hasilUSD, hasilEUR, gagal := Konversi(jumlah, MataUang)
+
+	if gagal != "" {
+		fmt.Println("Gagal:", gagal)
 	} else {
 		fmt.Printf("\nHasil Konversi dari %.2f %s:\n", jumlah, strings.ToUpper(MataUang))
 		fmt.Printf("Ke USD: $%.2f\n", hasilUSD)
