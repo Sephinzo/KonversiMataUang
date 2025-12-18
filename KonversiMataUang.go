@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 const (
@@ -14,51 +13,38 @@ const (
 	usd_eur = 0.86
 )
 
-func Konversi(jumlah float64, MataUang string) (float64, float64, string) {
-	if jumlah < 0 {
-		return 0, 0, "Tidak valid (jumlahnya negatif)"
-	}
-	var usd float64
-	var gagal string = ""
-
-	switch strings.ToUpper(MataUang) {
-	case "IDR":
-		usd = jumlah * idr_usd
-	case "PHP":
-		usd = jumlah * php_usd
-	case "THB":
-		usd = jumlah * thb_usd
-	case "MYR":
-		usd = jumlah * myr_usd
-	case "SGD":
-		usd = jumlah * sgd_usd
-	default:
-		gagal = "kode mata uang tidak valid"
-	}
-
-	if gagal != "" {
-		return 0, 0, gagal
-	}
-	eur := usd * usd_eur
-	return usd, eur, ""
-}
-
 func main() {
-	var jumlah float64
-	var MataUang string
+	var jumlah, usd, eur float64
+	var MataUang, errormsg string
 
-	fmt.Print("ketik mata uang yang akan dikonversi (IDR, PHP, THB, MYR, SGD): ")
+	fmt.Print("ketik mata uang yang akan dikonversi (IDR, PHP, THB, MYR, SGD) menggunakan huruf kapital: ")
 	fmt.Scan(&MataUang)
-	fmt.Print("ketik jumlah mata uang yang akan dikonversi (tanpa ./,): ")
+	fmt.Print("ketik jumlah mata uang yang akan dikonversi (tanpa titik atau koma): ")
 	fmt.Scan(&jumlah)
-
-	hasilUSD, hasilEUR, gagal := Konversi(jumlah, MataUang)
-
-	if gagal != "" {
-		fmt.Println("Gagal:", gagal)
+	// cek nilai minus
+	if jumlah < 0 {
+		errormsg = "Jumlah mata uang tidak boleh kurang dari 0"
 	} else {
-		fmt.Printf("\nHasil Konversi dari %.2f %s:\n", jumlah, strings.ToUpper(MataUang))
-		fmt.Printf("Ke USD: $%.2f\n", hasilUSD)
-		fmt.Printf("Ke EURO: €%.2f\n", hasilEUR)
+		if MataUang == "IDR" {
+			usd = jumlah * idr_usd
+		} else if MataUang == "PHP" {
+			usd = jumlah * php_usd
+		} else if MataUang == "THB" {
+			usd = jumlah * thb_usd
+		} else if MataUang == "MYR" {
+			usd = jumlah * myr_usd
+		} else if MataUang == "SGD" {
+			usd = jumlah * sgd_usd
+		} else {
+			errormsg = "Mata uang yang anda masukkan tidak tersedia"
+		}
+	}
+	eur = usd * usd_eur
+
+	if errormsg == "" {
+		fmt.Printf("USD: $%f\n", usd)
+		fmt.Printf("EUR: €%f", eur)
+	} else {
+		fmt.Println("Gagal:", errormsg)
 	}
 }
