@@ -42,8 +42,8 @@ func main() {
 	eur = usd * usd_eur
 
 	if errormsg == "" {
-		fmt.Printf("USD: $%f\n", usd)
-		fmt.Printf("EUR: €%f", eur)
+		fmt.Printf("USD: $%.2f\n", usd)
+		fmt.Printf("EUR: €%.2f\n", eur)
 	} else {
 		fmt.Println("Gagal:", errormsg)
 	}
