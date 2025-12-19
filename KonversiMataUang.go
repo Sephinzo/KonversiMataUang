@@ -1,9 +1,7 @@
 package main
-
 import (
 	"fmt"
 )
-
 const (
 	idr_usd = 0.00006
 	php_usd = 0.17
@@ -12,7 +10,6 @@ const (
 	sgd_usd = 0.77
 	usd_eur = 0.86
 )
-
 func main() {
 	var jumlah, usd, eur float64
 	var MataUang, errormsg string
